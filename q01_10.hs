@@ -15,6 +15,10 @@ elementAt :: [a] -> Int -> a
 elementAt (x:xs) 1 = x
 elementAt (x:xs) n = elementAt xs (n - 1)
 
+-- PROBLEM 4 --
+myLength :: [a] -> Int
+myLength = foldr (const (+1)) 0
+
 -- PROBLEM 5 --
 myReverse :: [a] -> [a]
 myReverse [] = []
@@ -36,13 +40,14 @@ flatten (List []) = []
 -- PROBLEM 8 --
 compress :: Eq a => [a] -> [a]
 compress []     = []
-compress (x:xs) = x : (compress $ dropWhile (== x) xs)
+compress (x:xs) = x : compress (dropWhile (== x) xs)
 
 -- PROBLEM 9 --
-pack :: [a] -> [[a]]
-pack (x:xs) = x:(takeWhile (==x) xs) : pack (dropWhile (==x) xs)
-
+pack :: Eq a => [a] -> [[a]]
+pack [] = []
+pack (x:xs) = (x : takeWhile (==x) xs) : pack (dropWhile (==x) xs)
 
 -- PROBLEM 10 --
 encode :: Eq a => [a] -> [(Int, a)]
-encode = map (\x -> (length x, head x)) . group
+encode = map encodeGroup . group
+  where encodeGroup xs = (length xs, head xs)
